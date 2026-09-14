@@ -62,7 +62,7 @@ public class Exception_Runner {
 
 		WebElement elementToHover2 = wait.until(
 		    ExpectedConditions.visibilityOfElementLocated(
-		        By.xpath("//*[text()='EBS']")
+		        By.xpath("//*[normalize-space()='EBS']/ancestor::*[self::a or self::li or self::button][1]")
 		    )
 		);
 		
