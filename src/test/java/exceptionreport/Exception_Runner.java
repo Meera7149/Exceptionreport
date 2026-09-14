@@ -22,22 +22,25 @@ public class Exception_Runner {
     @Test
 	public static void exception_runner() throws IOException {
 		WebDriverManager.chromedriver().setup();
-		ChromeOptions options = new ChromeOptions();
+		/*
+		 * ChromeOptions options = new ChromeOptions();
+		 * 
+		 * options.addArguments("--user-data-dir=C:\\JenkinsChromeProfile");
+		 * options.addArguments("--disable-features=PasswordLeakDetection");
+		 * 
+		 * Map<String, Object> prefs = new HashMap<>();
+		 * prefs.put("profile.password_manager_leak_detection", false);
+		 * prefs.put("credentials_enable_service", false);
+		 * prefs.put("profile.password_manager_enabled", false);
+		 * 
+		 * options.setExperimentalOption("prefs", prefs);
+		 */
 
-		options.addArguments("--user-data-dir=C:\\JenkinsChromeProfile");
-		options.addArguments("--disable-features=PasswordLeakDetection");
-
-		Map<String, Object> prefs = new HashMap<>();
-		prefs.put("profile.password_manager_leak_detection", false);
-		prefs.put("credentials_enable_service", false);
-		prefs.put("profile.password_manager_enabled", false);
-
-		options.setExperimentalOption("prefs", prefs);
-
-		ChromeDriver driver = new ChromeDriver(options);
-		List<WebElement> rows;
+		ChromeDriver driver = new ChromeDriver();
+	
 		driver.manage().timeouts().implicitlyWait(java.time.Duration.ofSeconds(60));
 		driver.get("http://100.100.50.14/srx/dashboard#!");
+		//driver.get("http://100.100.60.116:8090/srx/dashboard#!");
 		driver.manage().window().maximize();
 		driver.findElement(By.xpath("//*[@name='sign_in_username_email']")).sendKeys("Bt_support");
 		driver.findElement(By.xpath("//*[@name='sign_in_password']")).sendKeys("OTA@#$2024");
@@ -46,6 +49,8 @@ public class Exception_Runner {
 	
 		// Mouse over example - hover over an element
 		Actions actions = new Actions(driver);
+		WebElement elementToHover1 = driver.findElement(By.xpath("(//*[text()='Booking Reports'])[2]"));
+		actions.moveToElement(elementToHover1).build().perform();
 		WebElement elementToHover = driver.findElement(By.xpath("(//*[@class='material-icons'])[6]"));
 		actions.moveToElement(elementToHover).build().perform();
 		
@@ -70,23 +75,50 @@ public class Exception_Runner {
 		driver.findElement(By.xpath("//*[@id='from_date']")).sendKeys("01-01-2023");
 		driver.findElement(By.xpath("//*[text()='SEARCH']")).click();
 		
+		/*
+		 * FileWriter writer = new FileWriter("automation-result.txt");
+		 * 
+		 * writer.write("Amount mismatch between Flight Booking and Sold Report\n");
+		 * 
+		 * int rowCount = driver.findElements( By.xpath("//*[@id='example']/tbody/tr")
+		 * ).size();
+		 * 
+		 * for (int i = 1; i <= rowCount; i++) {
+		 * 
+		 * WebElement column = driver.findElement(
+		 * By.xpath("//*[@id='example']/tbody/tr[" + i + "]/td[2]") );
+		 * 
+		 * System.out.println(column.getText()); writer.write(column.getText() + "\n");
+		 * } writer.close();
+		 */
+		WebDriverWait wait2 = new WebDriverWait(driver, java.time.Duration.ofSeconds(60));
+
+		By rowsLocator = By.xpath("//*[@id='example']/tbody/tr");
+
+		// Wait until at least one row is present
+		wait2.until(ExpectedConditions.presenceOfElementLocated(rowsLocator));
+
+		// Wait until the table finishes loading
+		wait2.until(driver2 -> driver.findElements(rowsLocator).size() > 0);
+
+		List<WebElement> rows1 = driver.findElements(rowsLocator);
+
+		System.out.println("Total rows found: " + rows1.size());
+
 		FileWriter writer = new FileWriter("automation-result.txt");
 
 		writer.write("Amount mismatch between Flight Booking and Sold Report\n");
-		
-		int rowCount = driver.findElements(
-		        By.xpath("//*[@id='example']/tbody/tr")
-		).size();
 
-		for (int i = 1; i <= rowCount; i++) {
+		for (int i = 1; i <= rows1.size(); i++) {
 
-		    WebElement column = driver.findElement(
+		    WebElement td2 = driver.findElement(
 		        By.xpath("//*[@id='example']/tbody/tr[" + i + "]/td[2]")
 		    );
 
-		    System.out.println(column.getText());
-		    writer.write(column.getText() + "\n");
+		    System.out.println(td2.getText());
+		     writer.write(td2.getText() + "\n");
 		}
+		
 		writer.close();
 
 	}
