@@ -107,7 +107,7 @@ public class Exception_Runner {
 
 		FileWriter writer = new FileWriter("automation-result.txt");
 
-		writer.write("Amount mismatch between Flight Booking and Sold Report\n");
+		//writer.write("Amount mismatch between Flight Booking and Sold Report\n");
 
 		for (int i = 1; i <= rows1.size(); i++) {
 
