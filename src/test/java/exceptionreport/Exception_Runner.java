@@ -72,7 +72,7 @@ public class Exception_Runner {
 		actions.click(elementToHover2).perform();
 		driver.findElement(By.xpath("//*[text()=' Exception Reports']")).click();
 		driver.findElement(By.xpath("//*[text()='Amount mismatch between Flight Booking and Sold Report']")).click();
-		driver.findElement(By.xpath("//*[@id='from_date']")).sendKeys("01-01-2023");
+		driver.findElement(By.xpath("//*[@id='from_date']")).sendKeys("01-01-2025");
 		driver.findElement(By.xpath("//*[text()='SEARCH']")).click();
 		
 		/*
@@ -99,7 +99,22 @@ public class Exception_Runner {
 		wait2.until(ExpectedConditions.presenceOfElementLocated(rowsLocator));
 
 		// Wait until the table finishes loading
-		wait2.until(driver2 -> driver.findElements(rowsLocator).size() > 0);
+		//wait2.until(driver2 -> driver.findElements(rowsLocator).size() > 0);
+		
+		// Wait until the number of rows remains stable
+		wait2.until(driver2 -> {
+		    int count1 = driver2.findElements(rowsLocator).size();
+
+		    try {
+		        Thread.sleep(1000);
+		    } catch (InterruptedException e) {
+		        Thread.currentThread().interrupt();
+		    }
+
+		    int count2 = driver2.findElements(rowsLocator).size();
+
+		    return count1 == count2;
+		});
 
 		List<WebElement> rows1 = driver.findElements(rowsLocator);
 
@@ -112,8 +127,7 @@ public class Exception_Runner {
 		for (int i = 1; i <= rows1.size(); i++) {
 
 		    WebElement td2 = driver.findElement(
-		        By.xpath("//*[@id='example']/tbody/tr[" + i + "]/td[2]")
-		    );
+		        By.xpath("//*[@id='example']/tbody/tr[" + i + "]/td[2]"));
 
 		    System.out.println(td2.getText());
 		     writer.write(td2.getText() + "\n");
