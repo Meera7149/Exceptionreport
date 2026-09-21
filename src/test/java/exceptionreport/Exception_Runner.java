@@ -21,7 +21,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class Exception_Runner {
     @Test
-	public static void exception_runner() throws IOException {
+	public static void exception_runner() throws IOException, InterruptedException {
 		WebDriverManager.chromedriver().setup();
 		/*
 		 * ChromeOptions options = new ChromeOptions();
@@ -96,48 +96,32 @@ public class Exception_Runner {
 
 		By rowsLocator = By.xpath("//*[@id='example']/tbody/tr");
 
-		// Wait for first row
+		// Wait until at least one row appears
 		wait2.until(ExpectedConditions.presenceOfElementLocated(rowsLocator));
 
-		// Wait until row count is stable for 3 seconds
-		wait2.until(driver2 -> {
-		    int count1 = driver2.findElements(rowsLocator).size();
+		// Give the table time to load
+		Thread.sleep(3000);
 
-		    try {
-		        Thread.sleep(3000);
-		    } catch (InterruptedException e) {
-		        Thread.currentThread().interrupt();
-		        return false;
+		// Get all rows
+		List<WebElement> rows = driver.findElements(rowsLocator);
+
+		System.out.println("Total rows found: " + rows.size());
+
+		FileWriter writer = new FileWriter("automation-result.txt");
+
+		for (WebElement row : rows) {
+
+		    List<WebElement> cells = row.findElements(By.tagName("td"));
+
+		    if (cells.size() >= 2) {
+		        String value = cells.get(1).getText();
+
+		        System.out.println(value);
+
+		        writer.write(value + "\n");
 		    }
+		}
 
-		    int count2 = driver2.findElements(rowsLocator).size();
-
-		    return count1 == count2;
-		});
-
-		// Get ALL rows after table loading is complete
-		List<WebElement> rows1 = driver.findElements(rowsLocator);
-
-		System.out.println("Total rows found: " + rows1.size());
-
-		try (FileWriter writer = new FileWriter("automation-result.txt")) {
-
-		    for (WebElement row : rows1) {
-
-		        List<WebElement> cells = row.findElements(By.tagName("td"));
-
-		        if (cells.size() >= 2) {
-		            String value = cells.get(1).getText();
-
-		            System.out.println("Record: " + value);
-		            writer.write(value + System.lineSeparator());
-		        }
-		    }
-		    writer.close();
-		} catch (IOException e) {
-			
-			System.out.println(e.getMessage());
-
-	}
+		writer.close();
 }
 }
