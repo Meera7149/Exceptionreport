@@ -2,6 +2,7 @@ package exceptionreport;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,24 +92,22 @@ public class Exception_Runner {
 		 * System.out.println(column.getText()); writer.write(column.getText() + "\n");
 		 * } writer.close();
 		 */
-		WebDriverWait wait2 = new WebDriverWait(driver, java.time.Duration.ofSeconds(60));
+		WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(60));
 
 		By rowsLocator = By.xpath("//*[@id='example']/tbody/tr");
 
-		// Wait until at least one row is present
+		// Wait for first row
 		wait2.until(ExpectedConditions.presenceOfElementLocated(rowsLocator));
 
-		// Wait until the table finishes loading
-		//wait2.until(driver2 -> driver.findElements(rowsLocator).size() > 0);
-		
-		// Wait until the number of rows remains stable
+		// Wait until row count is stable for 3 seconds
 		wait2.until(driver2 -> {
 		    int count1 = driver2.findElements(rowsLocator).size();
 
 		    try {
-		        Thread.sleep(1000);
+		        Thread.sleep(3000);
 		    } catch (InterruptedException e) {
 		        Thread.currentThread().interrupt();
+		        return false;
 		    }
 
 		    int count2 = driver2.findElements(rowsLocator).size();
@@ -116,24 +115,29 @@ public class Exception_Runner {
 		    return count1 == count2;
 		});
 
+		// Get ALL rows after table loading is complete
 		List<WebElement> rows1 = driver.findElements(rowsLocator);
 
 		System.out.println("Total rows found: " + rows1.size());
 
-		FileWriter writer = new FileWriter("automation-result.txt");
+		try (FileWriter writer = new FileWriter("automation-result.txt")) {
 
-		//writer.write("Amount mismatch between Flight Booking and Sold Report\n");
+		    for (WebElement row : rows1) {
 
-		for (int i = 1; i <= rows1.size(); i++) {
+		        List<WebElement> cells = row.findElements(By.tagName("td"));
 
-		    WebElement td2 = driver.findElement(
-		        By.xpath("//*[@id='example']/tbody/tr[" + i + "]/td[2]"));
+		        if (cells.size() >= 2) {
+		            String value = cells.get(1).getText();
 
-		    System.out.println(td2.getText());
-		     writer.write(td2.getText() + "\n");
-		}
-		
-		writer.close();
+		            System.out.println("Record: " + value);
+		            writer.write(value + System.lineSeparator());
+		        }
+		    }
+		    writer.close();
+		} catch (IOException e) {
+			
+			System.out.println(e.getMessage());
 
 	}
+}
 }
