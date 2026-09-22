@@ -120,7 +120,7 @@ public class Exception_Runner {
 
 		System.out.println("Total rows found: " + rows.size());
 
-		File resultFile = new File("automation-result.txt");
+		File resultFile = new File("C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Exception report runner\\automation-result.txt");
 
 		System.out.println("Writing file: " + resultFile.getAbsolutePath());
 
