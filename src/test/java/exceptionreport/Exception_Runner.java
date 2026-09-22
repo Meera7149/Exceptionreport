@@ -102,7 +102,7 @@ public class Exception_Runner {
 		wait2.until(ExpectedConditions.presenceOfElementLocated(rowsLocator));
 
 		// Wait until second column contains data
-		wait2.until(driver -> {
+		wait2.until(driver2 -> {
 
 		    List<WebElement> values = driver.findElements(valueLocator);
 
