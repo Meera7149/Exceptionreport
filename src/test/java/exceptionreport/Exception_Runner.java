@@ -126,11 +126,11 @@ public class Exception_Runner {
 
 		File resultFile = new File("automation-result.txt");
 
-		System.out.println("File path: " + resultFile.getAbsolutePath());
+		//System.out.println("File path: " + resultFile.getAbsolutePath());
 
 		try (FileWriter writer = new FileWriter(resultFile, false)) {
 
-		    writer.write("Amount mismatch between Flight Booking and Sold Report");
+		    
 		    writer.write(System.lineSeparator());
 
 		    for (WebElement row : rows) {
@@ -150,10 +150,6 @@ public class Exception_Runner {
 
 		    writer.flush();
 		}
-
-		System.out.println("File exists: " + resultFile.exists());
-		System.out.println("File size: " + resultFile.length() + " bytes");
-		System.out.println("File path: " + resultFile.getAbsolutePath());
 		}
 
 }
