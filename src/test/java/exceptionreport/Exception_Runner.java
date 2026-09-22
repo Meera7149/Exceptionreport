@@ -97,9 +97,12 @@ public class Exception_Runner {
 
 		By rowsLocator = By.xpath("//*[@id='example']/tbody/tr");
 		By valueLocator = By.xpath("//*[@id='example']/tbody/tr/td[2]");
-
+       
+		File resultFile = new File("C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Exception report runner\\automation-result.txt");
 		// Wait for rows
-		wait2.until(ExpectedConditions.presenceOfElementLocated(rowsLocator));
+		try{
+			wait2.until(ExpectedConditions.presenceOfElementLocated(rowsLocator));
+	
 
 		// Wait until second column contains data
 		wait2.until(driver2 -> {
@@ -120,7 +123,7 @@ public class Exception_Runner {
 
 		System.out.println("Total rows found: " + rows.size());
 
-		File resultFile = new File("C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Exception report runner\\automation-result.txt");
+		
 
 		System.out.println("Writing file: " + resultFile.getAbsolutePath());
 
@@ -155,5 +158,14 @@ public class Exception_Runner {
 
 		System.out.println("File size: " + resultFile.length() + " bytes");
 		}
+		catch(Exception e){
+			
+			FileWriter writer2 = new FileWriter(resultFile, false);
+			writer2.write("No new tickets found in the Report");
+			writer2.flush();
+			writer2.close();
+			System.out.println("No data found in the table");
+		}
 
+}
 }
