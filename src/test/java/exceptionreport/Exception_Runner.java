@@ -73,7 +73,7 @@ public class Exception_Runner {
 		actions.click(elementToHover2).perform();
 		driver.findElement(By.xpath("//*[text()=' Exception Reports']")).click();
 		driver.findElement(By.xpath("//*[text()='Amount mismatch between Flight Booking and Sold Report']")).click();
-		driver.findElement(By.xpath("//*[@id='from_date']")).sendKeys("01-01-2025");
+		driver.findElement(By.xpath("//*[@id='from_date']")).sendKeys("01-01-2023");
 		driver.findElement(By.xpath("//*[text()='SEARCH']")).click();
 		
 		/*
@@ -100,7 +100,7 @@ public class Exception_Runner {
 		wait2.until(ExpectedConditions.presenceOfElementLocated(rowsLocator));
 
 		// Give the table time to load
-		Thread.sleep(3000);
+		Thread.sleep(5000);
 
 		// Get all rows
 		List<WebElement> rows = driver.findElements(rowsLocator);
@@ -117,6 +117,7 @@ public class Exception_Runner {
 		        String value = cells.get(1).getText();
 
 		        System.out.println(value);
+		        writer.write("test");
 
 		        writer.write(value + "\n");
 		    }
