@@ -96,42 +96,37 @@ public class Exception_Runner {
 		WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(60));
 
 		By rowsLocator = By.xpath("//*[@id='example']/tbody/tr");
+		By valueLocator = By.xpath("//*[@id='example']/tbody/tr/td[2]");
 
-		// Wait until at least one row appears
+		// Wait for rows
 		wait2.until(ExpectedConditions.presenceOfElementLocated(rowsLocator));
-		int previousCount = 0;
-		int stableCount = 0;
 
-		while (stableCount < 5) {
+		// Wait until second column contains data
+		wait2.until(driver -> {
 
-		    int currentCount = driver.findElements(rowsLocator).size();
+		    List<WebElement> values = driver.findElements(valueLocator);
 
-		    System.out.println("Current rows: " + currentCount);
+		    for (WebElement value : values) {
 
-		    if (currentCount == previousCount) {
-		        stableCount++;
-		    } else {
-		        stableCount = 0;
+		        if (!value.getText().trim().isEmpty()) {
+		            return true;
+		        }
 		    }
 
-		    previousCount = currentCount;
+		    return false;
+		});
 
-		    Thread.sleep(1000);
-		}
-
-		// Get all rows
 		List<WebElement> rows = driver.findElements(rowsLocator);
 
 		System.out.println("Total rows found: " + rows.size());
 
 		File resultFile = new File("automation-result.txt");
 
-		//System.out.println("File path: " + resultFile.getAbsolutePath());
+		System.out.println("Writing file: " + resultFile.getAbsolutePath());
 
 		try (FileWriter writer = new FileWriter(resultFile, false)) {
 
-		    
-		    writer.write(System.lineSeparator());
+		    int savedCount = 0;
 
 		    for (WebElement row : rows) {
 
@@ -141,15 +136,24 @@ public class Exception_Runner {
 
 		            String value = cells.get(1).getText().trim();
 
-		            System.out.println("Saving: " + value);
+		            if (!value.isEmpty()) {
 
-		            writer.write(value);
-		            writer.write(System.lineSeparator());
+		                System.out.println("Saving: " + value);
+
+		                writer.write(value);
+		                writer.write(System.lineSeparator());
+
+		                savedCount++;
+		            }
 		        }
 		    }
 
 		    writer.flush();
+
+		    System.out.println("Total values saved: " + savedCount);
 		}
+
+		System.out.println("File size: " + resultFile.length() + " bytes");
 		}
 
 }
