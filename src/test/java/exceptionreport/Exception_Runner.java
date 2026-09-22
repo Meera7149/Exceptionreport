@@ -1,5 +1,6 @@
 package exceptionreport;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Duration;
@@ -123,21 +124,36 @@ public class Exception_Runner {
 
 		System.out.println("Total rows found: " + rows.size());
 
-		FileWriter writer = new FileWriter("automation-result.txt");
+		File resultFile = new File("automation-result.txt");
 
-		for (WebElement row : rows) {
+		System.out.println("File path: " + resultFile.getAbsolutePath());
 
-		    List<WebElement> cells = row.findElements(By.tagName("td"));
-		    if (cells.size() > 1) {
-		    String value = cells.get(1).getText();
+		try (FileWriter writer = new FileWriter(resultFile, false)) {
 
-		        System.out.println(value);
-		        writer.write("test");
+		    writer.write("Amount mismatch between Flight Booking and Sold Report");
+		    writer.write(System.lineSeparator());
 
-		        writer.write(value + "\n");
-		    
+		    for (WebElement row : rows) {
+
+		        List<WebElement> cells = row.findElements(By.tagName("td"));
+
+		        if (cells.size() > 1) {
+
+		            String value = cells.get(1).getText().trim();
+
+		            System.out.println("Saving: " + value);
+
+		            writer.write(value);
+		            writer.write(System.lineSeparator());
+		        }
+		    }
+
+		    writer.flush();
 		}
+
+		System.out.println("File exists: " + resultFile.exists());
+		System.out.println("File size: " + resultFile.length() + " bytes");
+		System.out.println("File path: " + resultFile.getAbsolutePath());
 		}
-		writer.close();
-}
+
 }
