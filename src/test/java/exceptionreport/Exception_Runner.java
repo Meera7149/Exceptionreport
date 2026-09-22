@@ -98,9 +98,25 @@ public class Exception_Runner {
 
 		// Wait until at least one row appears
 		wait2.until(ExpectedConditions.presenceOfElementLocated(rowsLocator));
+		int previousCount = 0;
+		int stableCount = 0;
 
-		// Give the table time to load
-		Thread.sleep(5000);
+		while (stableCount < 5) {
+
+		    int currentCount = driver.findElements(rowsLocator).size();
+
+		    System.out.println("Current rows: " + currentCount);
+
+		    if (currentCount == previousCount) {
+		        stableCount++;
+		    } else {
+		        stableCount = 0;
+		    }
+
+		    previousCount = currentCount;
+
+		    Thread.sleep(1000);
+		}
 
 		// Get all rows
 		List<WebElement> rows = driver.findElements(rowsLocator);
@@ -113,14 +129,13 @@ public class Exception_Runner {
 
 		    List<WebElement> cells = row.findElements(By.tagName("td"));
 
-		    if (cells.size() >= 2) {
-		        String value = cells.get(1).getText();
+		    String value = cells.get(1).getText();
 
 		        System.out.println(value);
 		        writer.write("test");
 
 		        writer.write(value + "\n");
-		    }
+		    
 		}
 
 		writer.close();
