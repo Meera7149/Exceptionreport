@@ -73,7 +73,7 @@ public class Exception_Runner {
 		actions.click(elementToHover2).perform();
 		driver.findElement(By.xpath("//*[text()=' Exception Reports']")).click();
 		driver.findElement(By.xpath("//*[text()='Amount mismatch between Flight Booking and Sold Report']")).click();
-		driver.findElement(By.xpath("//*[@id='from_date']")).sendKeys("01-01-2023");
+		driver.findElement(By.xpath("//*[@id='from_date']")).sendKeys("01-01-2025");
 		driver.findElement(By.xpath("//*[text()='SEARCH']")).click();
 		
 		/*
@@ -128,7 +128,7 @@ public class Exception_Runner {
 		for (WebElement row : rows) {
 
 		    List<WebElement> cells = row.findElements(By.tagName("td"));
-
+		    if (cells.size() > 1) {
 		    String value = cells.get(1).getText();
 
 		        System.out.println(value);
@@ -137,7 +137,7 @@ public class Exception_Runner {
 		        writer.write(value + "\n");
 		    
 		}
-
+		}
 		writer.close();
 }
 }
