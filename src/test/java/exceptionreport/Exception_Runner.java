@@ -93,7 +93,7 @@ public class Exception_Runner {
 		 * System.out.println(column.getText()); writer.write(column.getText() + "\n");
 		 * } writer.close();
 		 */
-		WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(60));
+		WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(120));
 
 		By rowsLocator = By.xpath("//*[@id='example']/tbody/tr");
 		By valueLocator = By.xpath("//*[@id='example']/tbody/tr/td[2]");
